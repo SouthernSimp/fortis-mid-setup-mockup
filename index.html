@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortis MID Setup Mockup</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #637083;
+      --line: #d8dee8;
+      --soft-line: #e8edf4;
+      --paper: #ffffff;
+      --canvas: #f5f7fa;
+      --blue: #2467d1;
+      --blue-soft: #e8f0ff;
+      --green: #16875d;
+      --green-soft: #e6f5ef;
+      --amber: #9b6918;
+      --amber-soft: #fff4da;
+      --red: #b33a3a;
+      --red-soft: #fdeaea;
+      --purple: #6b4fc4;
+      --purple-soft: #f0edff;
+      --shadow: 0 18px 50px rgba(28, 39, 58, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #ffffff 0%, var(--canvas) 38%, #eef3f8 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(255, 255, 255, 0.88);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, #1c5fb8, #16875d);
+      font-weight: 800;
+      letter-spacing: 0;
+      box-shadow: 0 8px 20px rgba(36, 103, 209, 0.24);
+    }
+
+    .brand-title {
+      line-height: 1.15;
+      min-width: 0;
+    }
+
+    .brand-title strong {
+      display: block;
+      font-size: 15px;
+      letter-spacing: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .operator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-light {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 5px var(--green-soft);
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    .workspace {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .rail,
+    .site-stage,
+    .decision-panel {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .rail {
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+
+    .rail-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .rail-head label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .mid-search {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mid-search input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    .mid-search input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+
+    .icon-button,
+    .text-button {
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: var(--blue);
+      color: white;
+      font-weight: 800;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .icon-button {
+      width: 42px;
+      flex: 0 0 42px;
+      font-size: 18px;
+    }
+
+    .text-button {
+      padding: 0 14px;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .icon-button:hover,
+    .text-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 9px 18px rgba(36, 103, 209, 0.22);
+    }
+
+    .text-button:focus-visible,
+    .icon-button:focus-visible,
+    .step:focus-visible,
+    .tab:focus-visible {
+      outline: 3px solid #b7cdf7;
+      outline-offset: 2px;
+    }
+
+    .text-button:disabled {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+      opacity: 0.88;
+    }
+
+    .text-button.secondary {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-color: #c7d9fb;
+      box-shadow: none;
+    }
+
+    .text-button.ghost {
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .text-button.success {
+      background: var(--green);
+    }
+
+    .step-list {
+      padding: 8px;
+    }
+
+    .step {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 10px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+    }
+
+    .step:hover {
+      background: #f3f6fb;
+    }
+
+    .step.active {
+      background: var(--blue-soft);
+    }
+
+    .step.done .step-index {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .step-index {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .step-caption {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .step-state {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--line);
+    }
+
+    .step.done .step-state {
+      background: var(--green);
+    }
+
+    .rail-foot {
+      border-top: 1px solid var(--line);
+      padding: 14px 18px 18px;
+      background: #fbfcfe;
+    }
+
+    .agent-strip {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .agent-strip strong {
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .agent-progress {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--soft-line);
+      overflow: hidden;
+    }
+
+    .agent-progress span {
+      display: block;
+      height: 100%;
+      width: var(--progress, 10%);
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width 0.35s ease;
+    }
+
+    .site-stage {
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .browser-chrome {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f9fbfe;
+    }
+
+    .traffic {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .traffic span {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--line);
+    }
+
+    .traffic span:nth-child(1) { background: #ee6a5f; }
+    .traffic span:nth-child(2) { background: #f6c453; }
+    .traffic span:nth-child(3) { background: #62c554; }
+
+    .address {
+      min-width: 0;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 0 12px;
+      border: 1px solid var(--soft-line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: white;
+      font-size: 12px;
+    }
+
+    .address span:last-child {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .site-content {
+      min-height: 682px;
+      padding: 22px;
+      background: var(--paper);
+    }
+
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .site-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .site-subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 9px;
+      font-size: 14px;
+    }
+
+    .case-grid,
+    .merchant-grid,
+    .wiki-grid,
+    .asf-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+    }
+
+    .merchant-grid {
+      grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+    }
+
+    .wiki-grid,
+    .asf-grid {
+      grid-template-columns: minmax(0, 1fr) 320px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .section-body {
+      padding: 16px;
+    }
+
+    .metadata {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--soft-line);
+      border-radius: 7px;
+      background: #fbfcfe;
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #f4f7fb;
+      border: 1px solid var(--soft-line);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.blue { color: var(--blue); background: var(--blue-soft); border-color: #c7d9fb; }
+    .badge.green { color: var(--green); background: var(--green-soft); border-color: #bfe6d5; }
+    .badge.amber { color: var(--amber); background: var(--amber-soft); border-color: #f3d696; }
+    .badge.red { color: var(--red); background: var(--red-soft); border-color: #f3c0c0; }
+    .badge.purple { color: var(--purple); background: var(--purple-soft); border-color: #d6ceff; }
+
+    .activity {
+      display: grid;
+      gap: 10px;
+    }
+
+    .activity-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .activity-row:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .activity-row strong {
+      color: var(--ink);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7f9fc;
+    }
+
+    .tab {
+      border: 0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tab.active {
+      color: var(--ink);
+      background: white;
+      box-shadow: 0 1px 4px rgba(28, 39, 58, 0.12);
+    }
+
+    .pdf-preview {
+      aspect-ratio: 0.78;
+      width: 100%;
+      max-height: 560px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(36,103,209,0.05) 0 1px, transparent 1px 100%),
+        linear-gradient(180deg, rgba(36,103,209,0.05) 0 1px, transparent 1px 100%),
+        white;
+      background-size: 18px 18px;
+      box-shadow: inset 0 0 0 7px #f8fafc;
+      overflow: hidden;
+    }
+
+    .pdf-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 9px;
+      margin-bottom: 16px;
+    }
+
+    .pdf-title strong {
+      font-size: 13px;
+    }
+
+    .pdf-title span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .form-line {
+      display: grid;
+      grid-template-columns: 26px 1fr 92px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf1f6;
+      font-size: 12px;
+    }
+
+    .check {
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      background: white;
+    }
+
+    .check.checked {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .form-line output {
+      justify-self: end;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .doc-note {
+      margin-top: 16px;
+      padding: 12px;
+      border-left: 4px solid var(--amber);
+      background: var(--amber-soft);
+      color: #5f471e;
+      border-radius: 0 7px 7px 0;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    .data-table th,
+    .data-table td {
+      border-bottom: 1px solid var(--soft-line);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: middle;
+      overflow-wrap: anywhere;
+    }
+
+    .data-table th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #fbfcfe;
+    }
+
+    .data-table td:last-child,
+    .data-table th:last-child {
+      text-align: right;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .rule-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rule {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .rule-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .rule.asf .rule-icon {
+      color: var(--purple);
+      background: var(--purple-soft);
+    }
+
+    .rule.warning {
+      border-color: #efcf8a;
+      background: #fffaf0;
+    }
+
+    .rule.warning .rule-icon {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .rule p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 4px;
+    }
+
+    .source-map {
+      display: grid;
+      gap: 12px;
+    }
+
+    .source-line {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--soft-line);
+      font-size: 13px;
+    }
+
+    .source-line:last-child {
+      border-bottom: 0;
+    }
+
+    .source-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--ink);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .compare {
+      display: grid;
+      gap: 14px;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1fr) minmax(0, 1fr) 120px;
+      gap: 10px;
+      align-items: stretch;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .compare-cell {
+      padding: 10px;
+      border-radius: 7px;
+      background: white;
+      border: 1px solid var(--soft-line);
+      min-width: 0;
+    }
+
+    .compare-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .compare-value {
+      font-size: 13px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .final-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border-radius: 7px;
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .final-state.enable { background: var(--green); }
+    .final-state.disable { background: var(--red); }
+    .final-state.input { background: var(--blue); }
+
+    .config-console {
+      border: 1px solid #cad3df;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #101828;
+      color: #dce6f5;
+    }
+
+    .console-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .console-body {
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .command-line {
+      display: grid;
+      grid-template-columns: 74px 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .command-line span:first-child {
+      color: #93c5fd;
+    }
+
+    .command-line span:nth-child(2) {
+      overflow-wrap: anywhere;
+    }
+
+    .command-line strong {
+      color: #86efac;
+    }
+
+    .decision-panel {
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+
+    .decision-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .decision-head .badge-row {
+      margin-top: 10px;
+    }
+
+    .decision-body {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .decision-summary {
+      display: grid;
+      gap: 10px;
+    }
+
+    .decision-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--soft-line);
+      font-size: 13px;
+    }
+
+    .decision-item:last-child {
+      border-bottom: 0;
+    }
+
+    .decision-item span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .decision-chip {
+      min-width: 82px;
+      text-align: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .decision-chip.enable { background: var(--green); }
+    .decision-chip.disable { background: var(--red); }
+    .decision-chip.input { background: var(--blue); }
+    .decision-chip.waiting { background: var(--muted); }
+
+    .audit-log {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .audit-entry {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 9px;
+    }
+
+    .audit-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--line);
+      margin-top: 5px;
+    }
+
+    .audit-entry.done .audit-dot {
+      background: var(--green);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: 260px minmax(0, 1fr);
+      }
+
+      .decision-panel {
+        grid-column: 1 / -1;
+        position: static;
+      }
+
+      .decision-body {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        height: auto;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        flex-direction: column;
+      }
+
+      main {
+        padding: 14px;
+      }
+
+      .workspace,
+      .case-grid,
+      .merchant-grid,
+      .wiki-grid,
+      .asf-grid,
+      .decision-body {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        position: static;
+      }
+
+      .site-content {
+        padding: 16px;
+        min-height: 0;
+      }
+
+      .site-header {
+        flex-direction: column;
+      }
+
+      .metadata {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div class="brand-title">
+          <strong>Fortis Merchant Setup Review</strong>
+          <span>Four-site MID workflow mockup for employee-assisted configuration</span>
+        </div>
+      </div>
+      <div class="operator">
+        <span class="status-light"></span>
+        <span>Demo environment · Nathan McCreery · May 20, 2026</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="workspace">
+        <aside class="rail">
+          <div class="rail-head">
+            <label for="midInput">Merchant ID</label>
+            <div class="mid-search">
+              <input id="midInput" value="MID-88413927" aria-label="Merchant ID">
+              <button class="icon-button" id="loadCase" title="Load merchant case">↵</button>
+            </div>
+            <div class="badge-row">
+              <span class="badge blue">Demo case</span>
+              <span class="badge green">PDF found</span>
+            </div>
+          </div>
+
+          <div class="step-list" aria-label="Mock website workflow">
+            <button class="step active done" data-site="case">
+              <span class="step-index">1</span>
+              <span>
+                <span class="step-title">CaseDesk</span>
+                <span class="step-caption">Find the case and MID</span>
+              </span>
+              <span class="step-state"></span>
+            </button>
+            <button class="step" data-site="merchant">
+              <span class="step-index">2</span>
+              <span>
+                <span class="step-title">MerchantVault</span>
+                <span class="step-caption">Open merchant PDF</span>
+              </span>
+              <span class="step-state"></span>
+            </button>
+            <button class="step" data-site="wiki">
+              <span class="step-index">3</span>
+              <span>
+                <span class="step-title">SetupWiki</span>
+                <span class="step-caption">Read standard rules</span>
+              </span>
+              <span class="step-state"></span>
+            </button>
+            <button class="step" data-site="asf">
+              <span class="step-index">4</span>
+              <span>
+                <span class="step-title">ASF Control</span>
+                <span class="step-caption">Apply override truth</span>
+              </span>
+              <span class="step-state"></span>
+            </button>
+          </div>
+
+          <div class="rail-foot">
+            <div class="agent-strip">
+              <strong>Hermes observation trace</strong>
+              <span id="traceText">Case loaded. MID copied from CaseDesk and ready for cross-system lookup.</span>
+              <div class="agent-progress" aria-label="Workflow completion">
+                <span id="progressBar"></span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="site-stage" aria-live="polite">
+          <div class="browser-chrome">
+            <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="address">
+              <span>https://</span>
+              <span id="addressText">casedesk.fortis.internal/cases/CASE-20491</span>
+            </div>
+          </div>
+
+          <div class="site-content" id="caseSite">
+            <div class="site-header">
+              <div>
+                <div class="site-kicker">Website 1 · Employee case queue</div>
+                <h1>Case CASE-20491</h1>
+                <p class="site-subtitle">Employee begins here, opens the pending merchant setup request, and captures the MID used across all downstream systems.</p>
+              </div>
+              <button class="text-button" data-next="merchant">Open merchant file</button>
+            </div>
+
+            <div class="case-grid">
+              <div class="section">
+                <div class="section-head">
+                  <h2>Case details</h2>
+                  <span class="badge amber">Due today</span>
+                </div>
+                <div class="section-body">
+                  <div class="metadata">
+                    <div class="metric"><label>MID</label><strong>MID-88413927</strong></div>
+                    <div class="metric"><label>Merchant</label><strong>Prairie Point Bistro</strong></div>
+                    <div class="metric"><label>Request type</label><strong>Boarding parameter review</strong></div>
+                    <div class="metric"><label>Queue</label><strong>Underwriting Ops</strong></div>
+                  </div>
+                  <div class="badge-row">
+                    <span class="badge blue">PDF checklist</span>
+                    <span class="badge purple">Wiki cross-reference</span>
+                    <span class="badge red">ASF override required</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="section-head">
+                  <h2>Employee activity</h2>
+                  <span class="badge green">Active</span>
+                </div>
+                <div class="section-body activity">
+                  <div class="activity-row">
+                    <strong>09:31 AM</strong>
+                    <span>Case opened by employee. Merchant ID copied for system lookup.</span>
+                  </div>
+                  <div class="activity-row">
+                    <strong>09:33 AM</strong>
+                    <span>Merchant setup PDF identified as required source document.</span>
+                  </div>
+                  <div class="activity-row">
+                    <strong>Next step</strong>
+                    <span>Paste MID into MerchantVault and review checkmarked PDF fields.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="site-content hidden" id="merchantSite">
+            <div class="site-header">
+              <div>
+                <div class="site-kicker">Website 2 · Merchant document portal</div>
+                <h1>MerchantVault record</h1>
+                <p class="site-subtitle">The employee pastes the MID here to pull merchant data and inspect the hosted PDF checklist connected to the merchant number.</p>
+              </div>
+              <button class="text-button" data-next="wiki">Cross-reference wiki</button>
+            </div>
+
+            <div class="merchant-grid">
+              <div class="section">
+                <div class="section-head">
+                  <h2>Hosted PDF</h2>
+                  <span class="badge green">Checklist parsed</span>
+                </div>
+                <div class="section-body">
+                  <div class="pdf-preview" role="img" aria-label="Mock merchant setup PDF preview">
+                    <div class="pdf-title">
+                      <strong>Merchant Boarding Addendum</strong>
+                      <span>MID-88413927</span>
+                    </div>
+                    <div class="form-line">
+                      <span class="check checked">✓</span>
+                      <span>Enable card-not-present surcharging</span>
+                      <output>Checked</output>
+                    </div>
+                    <div class="form-line">
+                      <span class="check checked">✓</span>
+                      <span>Disable paper statements</span>
+                      <output>Checked</output>
+                    </div>
+                    <div class="form-line">
+                      <span class="check"></span>
+                      <span>Enable next-day funding</span>
+                      <output>Blank</output>
+                    </div>
+                    <div class="form-line">
+                      <span class="check checked">✓</span>
+                      <span>Set settlement cutoff</span>
+                      <output>9:00 PM</output>
+                    </div>
+                    <div class="form-line">
+                      <span class="check checked">✓</span>
+                      <span>Add MCC category</span>
+                      <output>5812</output>
+                    </div>
+                    <div class="doc-note">
+                      PDF says surcharging should be enabled, but the employee must verify the merchant-specific ASF before changing production configuration.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="section-head">
+                  <h2>Extracted fields</h2>
+                  <span class="badge blue">MID matched</span>
+                </div>
+                <div class="section-body">
+                  <table class="data-table">
+                    <thead>
+                      <tr><th>Field</th><th>Source value</th><th>Confidence</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Surcharging</td><td>Requested enabled</td><td>98%</td></tr>
+                      <tr><td>Paper statements</td><td>Disable</td><td>99%</td></tr>
+                      <tr><td>Settlement cutoff</td><td>9:00 PM CST</td><td>94%</td></tr>
+                      <tr><td>MCC</td><td>5812 · Eating places</td><td>97%</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="doc-note">
+                    Hermes would capture these values, cite the page region, and carry them forward as proposed changes rather than final truth.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="site-content hidden" id="wikiSite">
+            <div class="site-header">
+              <div>
+                <div class="site-kicker">Website 3 · Setup wiki</div>
+                <h1>Parameter reference</h1>
+                <p class="site-subtitle">The employee checks standard setup guidance, then marks anything that must be validated against the merchant-specific ASF before final action.</p>
+              </div>
+              <button class="text-button" data-next="asf">Open ASF control</button>
+            </div>
+
+            <div class="wiki-grid">
+              <div class="section">
+                <div class="section-head">
+                  <h2>Relevant wiki rules</h2>
+                  <span class="badge purple">Policy article W-44</span>
+                </div>
+                <div class="section-body rule-stack">
+                  <div class="rule">
+                    <div class="rule-icon">W</div>
+                    <div>
+                      <h3>Surcharging</h3>
+                      <p>Enable when requested on the PDF and merchant category is permitted. Must be blocked when ASF lists a merchant-specific exception.</p>
+                    </div>
+                  </div>
+                  <div class="rule">
+                    <div class="rule-icon">W</div>
+                    <div>
+                      <h3>Paper statements</h3>
+                      <p>Disable when the PDF has the e-statement checkbox selected and a billing email is present in the merchant profile.</p>
+                    </div>
+                  </div>
+                  <div class="rule warning">
+                    <div class="rule-icon">!</div>
+                    <div>
+                      <h3>Source precedence</h3>
+                      <p>ASF is the final authority. When Wiki and ASF disagree, apply the ASF value and log the override reason.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="section-head">
+                  <h2>Source order</h2>
+                </div>
+                <div class="section-body source-map">
+                  <div class="source-line"><span class="source-number">1</span><strong>CaseDesk</strong><span>MID</span></div>
+                  <div class="source-line"><span class="source-number">2</span><strong>PDF</strong><span>Requested</span></div>
+                  <div class="source-line"><span class="source-number">3</span><strong>Wiki</strong><span>Standard</span></div>
+                  <div class="source-line"><span class="source-number">4</span><strong>ASF</strong><span>Final</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="site-content hidden" id="asfSite">
+            <div class="site-header">
+              <div>
+                <div class="site-kicker">Website 4 · ASF authoritative setup file</div>
+                <h1>Final configuration decision</h1>
+                <p class="site-subtitle">ASF trumps the wiki and the PDF when there is a merchant-specific override. This screen shows the resulting enable, disable, and input actions.</p>
+              </div>
+              <button class="text-button success" id="applySetup">Apply setup actions</button>
+            </div>
+
+            <div class="asf-grid">
+              <div class="section">
+                <div class="section-head">
+                  <h2>PDF vs Wiki vs ASF</h2>
+                  <span class="badge red">1 override</span>
+                </div>
+                <div class="section-body compare">
+                  <div class="compare-row">
+                    <div class="compare-cell">
+                      <div class="compare-label">Parameter</div>
+                      <div class="compare-value">Surcharging</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">PDF / Wiki</div>
+                      <div class="compare-value">Enable for eligible CNP merchants</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">ASF</div>
+                      <div class="compare-value">Merchant exception: do not enable</div>
+                    </div>
+                    <div class="final-state disable">Disable</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-cell">
+                      <div class="compare-label">Parameter</div>
+                      <div class="compare-value">Paper statements</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">PDF / Wiki</div>
+                      <div class="compare-value">Disable when e-statement checked</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">ASF</div>
+                      <div class="compare-value">No exception found</div>
+                    </div>
+                    <div class="final-state disable">Disable</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-cell">
+                      <div class="compare-label">Parameter</div>
+                      <div class="compare-value">Settlement cutoff</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">PDF / Wiki</div>
+                      <div class="compare-value">9:00 PM CST</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">ASF</div>
+                      <div class="compare-value">Region cap: 8:30 PM CST</div>
+                    </div>
+                    <div class="final-state input">Input 8:30</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-cell">
+                      <div class="compare-label">Parameter</div>
+                      <div class="compare-value">MCC</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">PDF / Wiki</div>
+                      <div class="compare-value">5812 · Eating places</div>
+                    </div>
+                    <div class="compare-cell">
+                      <div class="compare-label">ASF</div>
+                      <div class="compare-value">Matches PDF</div>
+                    </div>
+                    <div class="final-state input">Input 5812</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="section-head">
+                  <h2>Configuration console</h2>
+                  <span class="badge blue" id="consoleState">Ready</span>
+                </div>
+                <div class="section-body">
+                  <div class="config-console">
+                    <div class="console-head">
+                      <span>ASF_APPLY · MID-88413927</span>
+                      <span id="consoleHeadState">staged</span>
+                    </div>
+                    <div class="console-body" id="consoleLines">
+                      <div class="command-line"><span>SET</span><span>paper_statements=false</span><strong>queued</strong></div>
+                      <div class="command-line"><span>SET</span><span>surcharge_enabled=false</span><strong>queued</strong></div>
+                      <div class="command-line"><span>SET</span><span>settlement_cutoff=20:30:00 CST</span><strong>queued</strong></div>
+                      <div class="command-line"><span>SET</span><span>mcc=5812</span><strong>queued</strong></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="decision-panel">
+          <div class="decision-head">
+            <div class="site-kicker">Live decision package</div>
+            <h2>Prairie Point Bistro</h2>
+            <div class="badge-row">
+              <span class="badge blue">MID-88413927</span>
+              <span class="badge amber">ASF required</span>
+            </div>
+          </div>
+          <div class="decision-body">
+            <div>
+              <h3>Output actions</h3>
+              <div class="decision-summary" id="decisionSummary">
+                <div class="decision-item">
+                  <strong>Surcharging<span>Waiting on ASF validation</span></strong>
+                  <span class="decision-chip waiting">Waiting</span>
+                </div>
+                <div class="decision-item">
+                  <strong>Paper statements<span>PDF checkbox found</span></strong>
+                  <span class="decision-chip disable">Disable</span>
+                </div>
+                <div class="decision-item">
+                  <strong>Settlement cutoff<span>Waiting on ASF cap</span></strong>
+                  <span class="decision-chip waiting">Waiting</span>
+                </div>
+                <div class="decision-item">
+                  <strong>MCC<span>PDF value parsed</span></strong>
+                  <span class="decision-chip input">5812</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3>Audit trail</h3>
+              <div class="audit-log" id="auditLog">
+                <div class="audit-entry done"><span class="audit-dot"></span><span>CaseDesk provided MID and merchant name.</span></div>
+                <div class="audit-entry"><span class="audit-dot"></span><span>MerchantVault PDF fields not reviewed yet.</span></div>
+                <div class="audit-entry"><span class="audit-dot"></span><span>Wiki and ASF comparison pending.</span></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sites = {
+      case: {
+        url: "casedesk.fortis.internal/cases/CASE-20491",
+        trace: "Case loaded. MID copied from CaseDesk and ready for cross-system lookup.",
+        progress: 25
+      },
+      merchant: {
+        url: "merchantvault.fortis.internal/search?mid=MID-88413927",
+        trace: "MerchantVault returned the hosted PDF. Hermes extracted requested setup fields but has not treated them as final truth.",
+        progress: 50
+      },
+      wiki: {
+        url: "setupwiki.fortis.internal/articles/W-44-boarding-parameters",
+        trace: "Wiki rules found standard guidance and flagged ASF as the highest-precedence source.",
+        progress: 75
+      },
+      asf: {
+        url: "asf-control.fortis.internal/merchant/MID-88413927/parameters",
+        trace: "ASF comparison complete. One merchant-specific override changes the final action package.",
+        progress: 100
+      }
+    };
+
+    const siteIds = Object.keys(sites);
+    const addressText = document.getElementById("addressText");
+    const traceText = document.getElementById("traceText");
+    const progressBar = document.getElementById("progressBar");
+    const steps = [...document.querySelectorAll(".step")];
+
+    function renderDecision(site) {
+      const decisionSummary = document.getElementById("decisionSummary");
+      const auditLog = document.getElementById("auditLog");
+
+      if (site === "case") {
+        decisionSummary.innerHTML = `
+          <div class="decision-item"><strong>Surcharging<span>Waiting on ASF validation</span></strong><span class="decision-chip waiting">Waiting</span></div>
+          <div class="decision-item"><strong>Paper statements<span>PDF checkbox found</span></strong><span class="decision-chip disable">Disable</span></div>
+          <div class="decision-item"><strong>Settlement cutoff<span>Waiting on ASF cap</span></strong><span class="decision-chip waiting">Waiting</span></div>
+          <div class="decision-item"><strong>MCC<span>PDF value parsed</span></strong><span class="decision-chip input">5812</span></div>
+        `;
+        auditLog.innerHTML = `
+          <div class="audit-entry done"><span class="audit-dot"></span><span>CaseDesk provided MID and merchant name.</span></div>
+          <div class="audit-entry"><span class="audit-dot"></span><span>MerchantVault PDF fields not reviewed yet.</span></div>
+          <div class="audit-entry"><span class="audit-dot"></span><span>Wiki and ASF comparison pending.</span></div>
+        `;
+      }
+
+      if (site === "merchant") {
+        decisionSummary.innerHTML = `
+          <div class="decision-item"><strong>Surcharging<span>PDF requests enabled</span></strong><span class="decision-chip waiting">Check ASF</span></div>
+          <div class="decision-item"><strong>Paper statements<span>PDF checkbox found</span></strong><span class="decision-chip disable">Disable</span></div>
+          <div class="decision-item"><strong>Settlement cutoff<span>PDF says 9:00 PM CST</span></strong><span class="decision-chip input">9:00 PM</span></div>
+          <div class="decision-item"><strong>MCC<span>PDF value parsed</span></strong><span class="decision-chip input">5812</span></div>
+        `;
+        auditLog.innerHTML = `
+          <div class="audit-entry done"><span class="audit-dot"></span><span>CaseDesk provided MID and merchant name.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>MerchantVault PDF fields extracted with confidence scores.</span></div>
+          <div class="audit-entry"><span class="audit-dot"></span><span>Wiki and ASF comparison pending.</span></div>
+        `;
+      }
+
+      if (site === "wiki") {
+        decisionSummary.innerHTML = `
+          <div class="decision-item"><strong>Surcharging<span>Wiki permits, ASF still required</span></strong><span class="decision-chip waiting">Check ASF</span></div>
+          <div class="decision-item"><strong>Paper statements<span>Wiki agrees with PDF</span></strong><span class="decision-chip disable">Disable</span></div>
+          <div class="decision-item"><strong>Settlement cutoff<span>Standard accepts PDF time</span></strong><span class="decision-chip input">9:00 PM</span></div>
+          <div class="decision-item"><strong>MCC<span>Wiki category matched</span></strong><span class="decision-chip input">5812</span></div>
+        `;
+        auditLog.innerHTML = `
+          <div class="audit-entry done"><span class="audit-dot"></span><span>CaseDesk provided MID and merchant name.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>MerchantVault PDF fields extracted with confidence scores.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>Wiki confirmed standard policy and source precedence.</span></div>
+        `;
+      }
+
+      if (site === "asf") {
+        decisionSummary.innerHTML = `
+          <div class="decision-item"><strong>Surcharging<span>ASF merchant exception overrides PDF/Wiki</span></strong><span class="decision-chip disable">Disable</span></div>
+          <div class="decision-item"><strong>Paper statements<span>No ASF exception found</span></strong><span class="decision-chip disable">Disable</span></div>
+          <div class="decision-item"><strong>Settlement cutoff<span>ASF regional cap wins</span></strong><span class="decision-chip input">8:30 PM</span></div>
+          <div class="decision-item"><strong>MCC<span>ASF matches PDF</span></strong><span class="decision-chip input">5812</span></div>
+        `;
+        auditLog.innerHTML = `
+          <div class="audit-entry done"><span class="audit-dot"></span><span>CaseDesk provided MID and merchant name.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>MerchantVault PDF fields extracted with confidence scores.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>Wiki confirmed standard policy and source precedence.</span></div>
+          <div class="audit-entry done"><span class="audit-dot"></span><span>ASF override package generated for employee review.</span></div>
+        `;
+      }
+    }
+
+    function showSite(site) {
+      siteIds.forEach((id) => {
+        document.getElementById(`${id}Site`).classList.toggle("hidden", id !== site);
+      });
+
+      const siteIndex = siteIds.indexOf(site);
+      steps.forEach((step, index) => {
+        const active = step.dataset.site === site;
+        step.classList.toggle("active", active);
+        step.classList.toggle("done", index <= siteIndex);
+      });
+
+      addressText.textContent = sites[site].url;
+      traceText.textContent = sites[site].trace;
+      progressBar.style.setProperty("--progress", `${sites[site].progress}%`);
+      renderDecision(site);
+    }
+
+    steps.forEach((step) => {
+      step.addEventListener("click", () => showSite(step.dataset.site));
+    });
+
+    document.querySelectorAll("[data-next]").forEach((button) => {
+      button.addEventListener("click", () => showSite(button.dataset.next));
+    });
+
+    document.getElementById("loadCase").addEventListener("click", () => showSite("case"));
+
+    document.getElementById("applySetup").addEventListener("click", () => {
+      document.getElementById("consoleState").textContent = "Applied";
+      document.getElementById("consoleState").className = "badge green";
+      document.getElementById("consoleHeadState").textContent = "applied";
+      document.getElementById("consoleLines").innerHTML = `
+        <div class="command-line"><span>SET</span><span>paper_statements=false</span><strong>done</strong></div>
+        <div class="command-line"><span>SET</span><span>surcharge_enabled=false</span><strong>done</strong></div>
+        <div class="command-line"><span>SET</span><span>settlement_cutoff=20:30:00 CST</span><strong>done</strong></div>
+        <div class="command-line"><span>SET</span><span>mcc=5812</span><strong>done</strong></div>
+        <div class="command-line"><span>LOG</span><span>override_reason="ASF merchant exception"</span><strong>done</strong></div>
+      `;
+      document.getElementById("applySetup").textContent = "Setup applied";
+      document.getElementById("applySetup").disabled = true;
+      traceText.textContent = "Setup actions applied in the mock console and the ASF override reason was logged for audit.";
+    });
+
+    showSite("case");
+  </script>
+</body>
+</html>
