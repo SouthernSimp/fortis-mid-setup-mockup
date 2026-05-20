@@ -256,6 +256,52 @@
       background: var(--green);
     }
 
+    .automate-button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: white;
+      background: linear-gradient(135deg, #2467d1 0%, #16875d 100%);
+      box-shadow: 0 12px 24px rgba(36, 103, 209, 0.25);
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .automate-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 28px rgba(22, 135, 93, 0.26);
+    }
+
+    .automate-button:focus-visible {
+      outline: 3px solid #b7cdf7;
+      outline-offset: 2px;
+    }
+
+    .automate-button:disabled {
+      cursor: default;
+      transform: none;
+      opacity: 0.9;
+    }
+
+    .automate-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 13px;
+      line-height: 1;
+    }
+
     .step-list {
       padding: 8px;
     }
@@ -1103,6 +1149,10 @@
               <span class="badge blue">Demo case</span>
               <span class="badge green">PDF found</span>
             </div>
+            <button class="automate-button" id="automateProcess">
+              <span class="automate-icon">▶</span>
+              <span>Automate Process</span>
+            </button>
           </div>
 
           <div class="step-list" aria-label="Mock website workflow">
@@ -1618,7 +1668,30 @@
 
     document.getElementById("loadCase").addEventListener("click", () => showSite("case"));
 
-    document.getElementById("applySetup").addEventListener("click", () => {
+    const automateProcess = document.getElementById("automateProcess");
+    let automationTimers = [];
+
+    function clearAutomationTimers() {
+      automationTimers.forEach((timer) => window.clearTimeout(timer));
+      automationTimers = [];
+    }
+
+    function resetSetupState() {
+      const applySetup = document.getElementById("applySetup");
+      applySetup.textContent = "Apply setup actions";
+      applySetup.disabled = false;
+      document.getElementById("consoleState").textContent = "Ready";
+      document.getElementById("consoleState").className = "badge blue";
+      document.getElementById("consoleHeadState").textContent = "staged";
+      document.getElementById("consoleLines").innerHTML = `
+        <div class="command-line"><span>SET</span><span>paper_statements=false</span><strong>queued</strong></div>
+        <div class="command-line"><span>SET</span><span>surcharge_enabled=false</span><strong>queued</strong></div>
+        <div class="command-line"><span>SET</span><span>settlement_cutoff=20:30:00 CST</span><strong>queued</strong></div>
+        <div class="command-line"><span>SET</span><span>mcc=5812</span><strong>queued</strong></div>
+      `;
+    }
+
+    function applySetupActions() {
       document.getElementById("consoleState").textContent = "Applied";
       document.getElementById("consoleState").className = "badge green";
       document.getElementById("consoleHeadState").textContent = "applied";
@@ -1632,7 +1705,28 @@
       document.getElementById("applySetup").textContent = "Setup applied";
       document.getElementById("applySetup").disabled = true;
       traceText.textContent = "Setup actions applied in the mock console and the ASF override reason was logged for audit.";
-    });
+    }
+
+    function startAutomation() {
+      clearAutomationTimers();
+      resetSetupState();
+      automateProcess.disabled = true;
+      automateProcess.innerHTML = '<span class="automate-icon">…</span><span>Automation Running</span>';
+      showSite("case");
+      traceText.textContent = "Automation started. Hermes is carrying the MID through each system and collecting source evidence.";
+
+      automationTimers.push(window.setTimeout(() => showSite("merchant"), 850));
+      automationTimers.push(window.setTimeout(() => showSite("wiki"), 1700));
+      automationTimers.push(window.setTimeout(() => showSite("asf"), 2550));
+      automationTimers.push(window.setTimeout(() => {
+        applySetupActions();
+        automateProcess.disabled = false;
+        automateProcess.innerHTML = '<span class="automate-icon">↻</span><span>Run Automation Again</span>';
+      }, 3400));
+    }
+
+    document.getElementById("applySetup").addEventListener("click", applySetupActions);
+    automateProcess.addEventListener("click", startAutomation);
 
     showSite("case");
   </script>
